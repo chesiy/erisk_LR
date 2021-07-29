@@ -79,7 +79,8 @@ def test_in_sample_v2(tv, lda, clf, nega_path, posi_path):
 def test_in_sample_v1(tv, lda, clf, nega_path, posi_path):
     """
     以用户为单位，每读入用户一条新的post就重新测试一次；
-    可以选择部分用户进行测试，但用上了这些用户的所有post
+    可以选择部分用户进行测试，但用上了这些用户的所有post；
+    速度比v2快很多
     """
     negafiles = os.listdir(nega_path)
     posifiles = os.listdir(posi_path)

@@ -15,6 +15,7 @@ import argparse
 
 
 def train_model(nega_path, posi_path):
+    print("training models...")
     tv = TfidfVectorizer(binary=False, decode_error='ignore', stop_words='english', min_df=2)
     lda = LatentDirichletAllocation(n_components=25, learning_offset=10., random_state=0, max_iter=50)
     clf = LogisticRegression(random_state=0, C=16, penalty='l1', class_weight={0: 0.2, 1: 0.8}, dual=False,
@@ -30,14 +31,17 @@ def train_model(nega_path, posi_path):
     train_posts = posires + negares
     # TF-IDF的结果
     tf_res = tv.fit_transform(train_posts)
+    print("tf-idf done!")
     # LDA的结果
     lda_res = lda.fit_transform(tf_res)
+    print("lda done!")
     tf_res = tf_res.toarray()
 
     trainX = np.concatenate((tf_res, lda_res, train_feats), axis=1)
     trainY = [1] * posinum + [0] * neganum
 
     clf.fit(trainX, trainY)
+    print("LR done!")
 
     return tv, lda, clf
 
@@ -60,10 +64,13 @@ if __name__ == '__main__':
     erde5 = 0
     erde50 = 0
     if args.chunk == 1:
+        print("test in chunk....")
         erde5, erde50 = test_in_chunk(tv, lda, clf, nega_test_path, posi_test_path,args.chunknum)
     elif args.sample_version == 1:
+        print("test in sample v1....")
         erde5,erde50 = test_in_sample_v1(tv, lda, clf, nega_test_path, posi_test_path)
     elif args.sample_version == 2:
+        print("test in sample v2....")
         erde5, erde50 = test_in_sample_v2(tv, lda, clf, nega_test_path, posi_test_path)
 
     print('erde5:', erde5, 'erde50:', erde50)
