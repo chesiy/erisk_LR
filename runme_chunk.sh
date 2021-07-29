@@ -1,0 +1,1 @@
+nohup python -u main.py --chunk=1 --chunknum=10 > chunk.log 2>&1 &
